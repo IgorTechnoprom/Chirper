@@ -1,16 +1,26 @@
 <?php
 
+use Livewire\Attributes\Rule;
 use Livewire\Volt\Component;
 
 new class extends Component 
 {
     //
-    public string $message = ''; 
+    #[Rule('required|string|max:255')]    
+    public string $message = '';
+     
+    public function store(): void
+    {
+        $validated = $this->validate();
+ 
+        auth()->user()->chirps()->create($validated);
+ 
+        $this->message = '';
+    }  
 }; ?>
 
 <div>
-    //
-    <form wire:submit="store"> 
+        <form wire:submit="store"> 
         <textarea
             wire:model="message"
             placeholder="{{ __('What\'s on your mind?') }}"
